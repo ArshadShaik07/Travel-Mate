@@ -17,15 +17,15 @@ app.use("/api", Routes);
 app.use(errorHandler);
 
 mongoose
-    .connect(
-        `mongodb+srv://arshadshaik2007:${password}@cluster0.73udxbh.mongodb.net/travelApp?retryWrites=true&w=majority&appName=Cluster0`
-    )
-    .then(async () => {
-        console.log("connected to mongodb successfully");
-        app.listen(port, async () => {
-            console.log(`connected to port ${port} successfully`);
-        });
-    })
-    .catch((e) => {
-        console.log(e);
-    });
+	.connect(
+		`mongodb+srv://arshadshaik2007:${password}@cluster0.73udxbh.mongodb.net/travelApp?retryWrites=true&w=majority&appName=Cluster0`
+	)
+	.then(async () => {
+		console.log("connected to mongodb successfully");
+		app.listen(port, async () => {
+			console.log(`connected to port ${port} successfully`);
+		});
+	})
+	.catch((e) => {
+		console.log(e);
+	});
