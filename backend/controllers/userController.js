@@ -75,7 +75,15 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
 	const authHeader = req.headers["authorization"];
+	console.log(req.headers);
+	console.log(authHeader);
 	const refreshToken = authHeader.split(" ")[1];
+	jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+		if (err) {
+			res.status(403);
+			throw Error("access unauthorised!");
+		}
+	});
 	refreshTokens = refreshTokens.filter((t) => t !== refreshToken);
 	res.status(200).json({ message: "logged out succesfully" });
 };
