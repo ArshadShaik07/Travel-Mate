@@ -17,9 +17,11 @@ const registerUser = async (req, res) => {
 	const userNameExists = await User.findOne({ username: username });
 	const emailExists = await User.findOne({ email: email });
 	if (userNameExists) {
-		res.json({ message: "username already exists" });
+		res.status(400);
+		throw Error("username already exists");
 	} else if (emailExists) {
-		res.json({ message: "email already exists" });
+		res.status(400);
+		throw Error("email already exists");
 	} else {
 		const salt = await bcrypt.genSalt(10);
 
@@ -75,6 +77,7 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
 	const authHeader = req.headers["authorization"];
+	const refreshToken = authHeader.split()[1];
 	refreshTokens = refreshTokens.filter((t) => t !== refreshToken);
 	res.status(200).json({ message: "logged out succesfully" });
 };
