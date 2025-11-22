@@ -12,6 +12,8 @@ function AuthProvider({ children }) {
 	const [accessToken, setAccessToken] = useState("");
 	const [refreshToken, setRefreshToken] = useState("");
 	const [loggedIn, setLoggedIn] = useState(false);
+	const [hotels, setHotels] = useState([]);
+	const [flights, setFlights] = useState([]);
 
 	async function handleRegister() {
 		try {
@@ -21,8 +23,7 @@ function AuthProvider({ children }) {
 				password,
 			});
 			console.log(res.data.message);
-			setLoggedIn(true);
-			alert(res.data);
+			alert(`${res.data.message} please login now!`);
 			navigate("/");
 		} catch (e) {
 			console.log(e.response.data.error);
@@ -74,6 +75,40 @@ function AuthProvider({ children }) {
 		}
 	}
 
+	async function fetchHotels(city) {
+		try {
+			const res = await axios.get(
+				`http://localhost:3000/api/hotels?city=${city}`
+			);
+			setHotels(res.data);
+			console.log(res.data);
+		} catch (e) {
+			alert(e.response.data.error);
+		}
+	}
+
+	async function fetchFlights(from = "", to = "", date = "") {
+		try {
+			const res = await axios.get(
+				`http://localhost:3000/api/flights?from=${from}&to=${to}&date=${date}`
+			);
+			setFlights(res.data);
+			console.log(res.data);
+		} catch (e) {
+			console.log(e.response.data.error);
+			alert(e.response.data.error);
+		}
+	}
+	async function fetchFlightById(id) {
+		const res = await axios.get(`http://localhost:3000/api/flights/${id}`);
+		return res.data;
+	}
+
+	async function fetchHotelById(id) {
+		const res = await axios.get(`http://localhost:3000/api/hotels/${id}`);
+		return res.data;
+	}
+
 	return (
 		<AuthContext.Provider
 			value={{
@@ -89,6 +124,13 @@ function AuthProvider({ children }) {
 				setLoggedIn,
 				handleLogout,
 				handleRegister,
+				fetchHotels,
+				hotels,
+				setHotels,
+				fetchFlights,
+				flights,
+				fetchFlightById,
+				fetchHotelById,
 			}}
 		>
 			{children}

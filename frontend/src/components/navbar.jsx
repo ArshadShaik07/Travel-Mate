@@ -6,7 +6,11 @@ function Navbar() {
 	const { loggedIn, handleLogout } = useContext(AuthContext);
 
 	return (
-		<div className="flex items-center sticky top-0 justify-between px-6 py-4 bg-[#FFD166] shadow-md w-screen">
+		<div
+			className="sticky top-0 left-0 right-0 z-50
+    w-full px-5 py-4 bg-[rgb(255,209,102)] shadow-md
+    flex items-center justify-between"
+		>
 			{/* Logo */}
 			<div className="text-2xl font-bold text-gray-800">
 				<NavLink to="/">Travel Mate</NavLink>
@@ -14,6 +18,9 @@ function Navbar() {
 
 			{/* Right Links */}
 			<div className="flex gap-10 text-lg font-medium text-gray-800">
+				<p className="hover:text-gray-900 cursor-pointer transition">
+					<NavLink to="/">Home</NavLink>
+				</p>
 				<p className="hover:text-gray-900 cursor-pointer transition">
 					<NavLink to="/flights">Flights</NavLink>
 				</p>
@@ -28,6 +35,11 @@ function Navbar() {
 				{!loggedIn && (
 					<p className="hover:text-gray-900 cursor-pointer transition">
 						<NavLink to="/register">Sign in</NavLink>
+					</p>
+				)}
+				{loggedIn && (
+					<p className="hover:text-gray-900 cursor-pointer transition">
+						<NavLink to="/me">My Profile</NavLink>
 					</p>
 				)}
 				{loggedIn && (

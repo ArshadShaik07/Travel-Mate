@@ -21,7 +21,7 @@ function Register() {
 	}, []);
 
 	return (
-		<div className="flex justify-center items-center bg-gray-300">
+		<div className="flex justify-center items-center rounded-xl bg-gray-300">
 			<div className="flex flex-col items-center gap-5 bg-gray-200 p-8 rounded-xl shadow-lg w-[350px]">
 				{/* Circular Logo */}
 				<CircularText
@@ -61,7 +61,7 @@ function Register() {
 
 				{/* Sign in Button */}
 				<button
-					className="w-full bg-[#FFD166] text-gray-900 py-2 rounded-lg font-semibold
+					className="w-full bg-[rgb(255,209,102)] text-gray-900 py-2 rounded-lg font-semibold
                      hover:bg-[#ffcc5c] transition shadow"
 					onClick={() => {
 						if (!(email && username && password)) {
