@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extented: true }));
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: process.env.FRONT_END_URL, credentials: true }));
 app.use(cookieParser());
 const port = process.env.PORT || 8000;
 const password = process.env.PASSWORD;

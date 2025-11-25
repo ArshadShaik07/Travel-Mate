@@ -16,10 +16,11 @@ function AuthProvider({ children }) {
 	const [loading, setLoading] = useState(false);
 	const [updating, setUpdating] = useState(false);
 	axios.defaults.withCredentials = true;
+	const backendUrl = import.meta.env.BACKEND_URL;
 
 	async function handleRegister() {
 		try {
-			let res = await axios.post("http://localhost:3000/api/register", {
+			let res = await axios.post(`${backendUrl}/register`, {
 				email,
 				username,
 				password,
@@ -38,7 +39,7 @@ function AuthProvider({ children }) {
 
 	async function handleLogin() {
 		try {
-			let res = await axios.post("http://localhost:3000/api/login", {
+			let res = await axios.post(`${backendUrl}/login`, {
 				email,
 				password,
 			});
@@ -59,7 +60,7 @@ function AuthProvider({ children }) {
 	async function handleLogout() {
 		try {
 			let res = await axios.post(
-				"http://localhost:3000/api/logout",
+				`${backendUrl}/logout`,
 				{},
 				{
 					withCredentials: true,
@@ -81,15 +82,11 @@ function AuthProvider({ children }) {
 			if (username.length !== 0) updates.username = username;
 			if (password.length !== 0) updates.password = password;
 
-			let res = await axios.patch(
-				"http://localhost:3000/api/me",
-				updates,
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				}
-			);
+			let res = await axios.patch(`${backendUrl}/me`, updates, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
 			console.log(res.data);
 			setUpdating(false);
 			alert("updated successfully");
@@ -104,9 +101,7 @@ function AuthProvider({ children }) {
 
 	async function fetchHotels(city) {
 		try {
-			const res = await axios.get(
-				`http://localhost:3000/api/hotels?city=${city}`
-			);
+			const res = await axios.get(`${backendUrl}/hotels?city=${city}`);
 			setHotels(res.data);
 			console.log(res.data);
 		} catch (e) {
@@ -117,7 +112,7 @@ function AuthProvider({ children }) {
 	async function fetchFlights(from = "", to = "", date = "") {
 		try {
 			const res = await axios.get(
-				`http://localhost:3000/api/flights?from=${from}&to=${to}&date=${date}`
+				`${backendUrl}/flights?from=${from}&to=${to}&date=${date}`
 			);
 			setFlights(res.data);
 			console.log(res.data);
@@ -127,19 +122,19 @@ function AuthProvider({ children }) {
 		}
 	}
 	async function fetchFlightById(id) {
-		const res = await axios.get(`http://localhost:3000/api/flights/${id}`);
+		const res = await axios.get(`${backendUrl}/flights/${id}`);
 		return res.data;
 	}
 
 	async function fetchHotelById(id) {
-		const res = await axios.get(`http://localhost:3000/api/hotels/${id}`);
+		const res = await axios.get(`${backendUrl}/hotels/${id}`);
 		return res.data;
 	}
 
 	async function bookHotel(id, price, date) {
 		try {
 			const res = await axios.post(
-				"http://localhost:3000/api/bookings",
+				`${backendUrl}/bookings`,
 				{
 					type: "hotel",
 					itemId: id,
@@ -165,7 +160,7 @@ function AuthProvider({ children }) {
 	async function bookFlight(id, price, date) {
 		try {
 			const res = await axios.post(
-				"http://localhost:3000/api/bookings",
+				`${backendUrl}/bookings`,
 				{
 					type: "flight",
 					itemId: id,
@@ -189,13 +184,13 @@ function AuthProvider({ children }) {
 	}
 
 	async function renewToken() {
-		const res = await axios.get("http://localhost:3000/api/token");
+		const res = await axios.get(`${backendUrl}/token`);
 		return res.data.accessToken;
 	}
 
 	async function getMyProfile() {
 		try {
-			const res = await axios.get("http://localhost:3000/api/me", {
+			const res = await axios.get(`${backendUrl}/me`, {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 				},
@@ -209,14 +204,11 @@ function AuthProvider({ children }) {
 				console.log(newAccessToken + " from profile");
 				setAccessToken(newAccessToken);
 				try {
-					const res = await axios.get(
-						"http://localhost:3000/api/me",
-						{
-							headers: {
-								Authorization: `Bearer ${newAccessToken}`,
-							},
-						}
-					);
+					const res = await axios.get(`${backendUrl}/me`, {
+						headers: {
+							Authorization: `Bearer ${newAccessToken}`,
+						},
+					});
 					return res.data;
 				} catch (e) {
 					alert("session expired!");
@@ -228,14 +220,11 @@ function AuthProvider({ children }) {
 
 	async function getMybookings() {
 		try {
-			const res = await axios.get(
-				"http://localhost:3000/api/mybookings",
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				}
-			);
+			const res = await axios.get(`${backendUrl}/mybookings`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
 			console.log(res.data);
 			return res.data;
 		} catch (e) {
@@ -244,14 +233,11 @@ function AuthProvider({ children }) {
 				try {
 					const newAccessToken = await renewToken();
 					setAccessToken(newAccessToken);
-					const res = await axios.get(
-						"http://localhost:3000/api/mybookings",
-						{
-							headers: {
-								Authorization: `Bearer ${newAccessToken}`,
-							},
-						}
-					);
+					const res = await axios.get(`${backendUrl}/mybookings`, {
+						headers: {
+							Authorization: `Bearer ${newAccessToken}`,
+						},
+					});
 					return res.data;
 				} catch (e) {
 					alert("session expired!");
@@ -264,14 +250,11 @@ function AuthProvider({ children }) {
 
 	async function deleteBooking(id) {
 		try {
-			const res = await axios.delete(
-				`http://localhost:3000/api/bookings/${id}`,
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				}
-			);
+			const res = await axios.delete(`${backendUrl}/bookings/${id}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
 			alert(res.data.message);
 		} catch (e) {
 			console.log(e.response);
@@ -280,7 +263,7 @@ function AuthProvider({ children }) {
 					const newAccessToken = await renewToken();
 					setAccessToken(newAccessToken);
 					const res = await axios.delete(
-						`http://localhost:3000/api/bookings/${id}`,
+						`${backendUrl}/bookings/${id}`,
 						{
 							headers: {
 								Authorization: `Bearer ${newAccessToken}`,
