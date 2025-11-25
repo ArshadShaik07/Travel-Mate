@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
 	const [loading, setLoading] = useState(false);
 	const [updating, setUpdating] = useState(false);
 	axios.defaults.withCredentials = true;
-	const backendUrl = import.meta.env.VITE_BACKEND_URL;
+	const backendUrl = "https://holidaybookingsystem-backend.onrender.com/api";
 
 	async function handleRegister() {
 		try {
