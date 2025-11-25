@@ -64,30 +64,34 @@ TravelMate lets users search flights, search hotels, create bookings, view their
 Clone the repository:
 
 git clone <https://github.com/ArshadShaik07/Holiday-Booking-Site.git>
-cd <Holiday-Booking-Site>
 
-text
+cd <Holiday-Booking-Site>
 
 🔹 **Backend Setup**
 
 cd backend
+
 npm install
+
 npm start
 
 Create a `.env` file with:
 
 MONGO_URI=your_mongodb_url
+
 JWT_SECRET=your_secret
+
 REFRESH_SECRET=your_refresh_token_secret
+
 PORT=3000
 
 🔹 **Frontend Setup**
 
 cd frontend
-npm install
-npm run dev
 
-text
+npm install
+
+npm run dev
 
 The frontend will run on http://localhost:5173/  
 The backend will run on http://localhost:3000/
