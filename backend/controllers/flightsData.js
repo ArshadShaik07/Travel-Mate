@@ -1,27 +1,23 @@
 import { Flight } from "../models/flights.model.js";
 
 const showFlights = async (req, res) => {
-	const { from, to, date } = req.query;
-	if (from.length === 0 && to.length === 0 && date.length === 0) {
-		const flights = await Flight.find({});
-		return res.status(200).send(flights);
-	} else if (from.length !== 0 && to.length !== 0 && date.length === 0) {
-		const flights = await Flight.find({ from, to });
-		if (flights.length === 0) {
-			res.status(404);
-			throw Error("no fligths found!");
-		} else {
-			return res.status(200).json(flights);
-		}
-	}
-	const flights = await Flight.find({ from, to, date });
-	console.log(flights);
-	if (flights.length === 0) {
-		res.status(404);
-		throw Error("no flights found!");
-	} else {
-		res.status(200).json(flights);
-	}
+	let { from, to, date, sortParam, sortOrder } = req.query;
+	from = from?.trim();
+	to = to?.trim();
+	date = date?.trim();
+	sortParam = sortParam?.trim();
+	sortOrder = sortOrder?.trim();
+
+	let query = {};
+	if (from) query.from = from;
+	if (to) query.to = to;
+	if (date) query.date = date;
+
+	let sorting = {};
+	if (sortParam && sortOrder) sorting[sortParam] = Number(sortOrder);
+	console.log(sorting);
+
+	res.status(200).json(await Flight.find(query).sort(sorting));
 };
 
 const getFlightById = async (req, res) => {
