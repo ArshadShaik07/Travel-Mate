@@ -15,7 +15,6 @@ const showFlights = async (req, res) => {
 
 	let sorting = {};
 	if (sortParam && sortOrder) sorting[sortParam] = Number(sortOrder);
-	console.log(sorting);
 
 	res.status(200).json(await Flight.find(query).sort(sorting));
 };

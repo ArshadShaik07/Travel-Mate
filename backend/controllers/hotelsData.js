@@ -1,31 +1,16 @@
 import { Hotel } from "../models/hotels.model.js";
 
 const showHotels = async (req, res) => {
-	const { city, sortOrder } = req.query;
-	let hotels;
-	if (!city) {
-		if (!sortOrder) {
-			const hotels = await Hotel.find({});
-			return res.status(200).json(hotels);
-		} else {
-			const hotels = await Hotel.find({}).sort(sortOrder);
-			return res.status(200).json(hotels);
-		}
-	} else {
-		if (sortOrder) {
-			hotels = await Hotel.find({ city })
-				.sort({ pricePerNight: 1 })
-				.sort(sortOrder);
-		} else {
-			hotels = await Hotel.find({ city }).sort({ pricePerNight: 1 });
-		}
-	}
-	if (hotels.length === 0) {
-		res.status(404);
-		throw Error("no hotels available");
-	} else {
-		res.status(200).json(hotels);
-	}
+	let { city, sortParam, sortOrder } = req.query;
+	let query = {};
+	city = city?.trim();
+	sortParam = sortParam?.trim();
+	sortOrder = sortOrder?.trim();
+
+	let sorting = {};
+	if (sortParam && sortOrder) sorting[sortParam] = Number(sortOrder);
+	if (city) query.city = city;
+	res.status(200).json(await Hotel.find(query).sort(sorting));
 };
 
 const getHotelById = async (req, res) => {
