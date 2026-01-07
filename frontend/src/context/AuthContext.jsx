@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
 	const [loading, setLoading] = useState(false);
 	const [updating, setUpdating] = useState(false);
 	axios.defaults.withCredentials = true;
-	const backendUrl = "https://holidaybookingsystem-backend.onrender.com/api";
+	const backendUrl = "http://localhost:3000/api";
 
 	async function handleRegister() {
 		try {
@@ -109,10 +109,17 @@ function AuthProvider({ children }) {
 		}
 	}
 
-	async function fetchFlights(from = "", to = "", date = "") {
+	async function fetchFlights(
+		from = "",
+		to = "",
+		date = "",
+		sortParam = "price",
+		sortOrder = 1
+	) {
+		console.log(sortParam, sortOrder);
 		try {
 			const res = await axios.get(
-				`${backendUrl}/flights?from=${from}&to=${to}&date=${date}`
+				`${backendUrl}/flights?from=${from}&to=${to}&date=${date}&sortParam=${sortParam}&sortOrder=${sortOrder}`
 			);
 			setFlights(res.data);
 			console.log(res.data);

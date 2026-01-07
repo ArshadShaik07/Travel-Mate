@@ -12,9 +12,9 @@ const showFlights = async (req, res) => {
 	if (from) query.from = from;
 	if (to) query.to = to;
 	if (date) query.date = date;
-
 	let sorting = {};
 	if (sortParam && sortOrder) sorting[sortParam] = Number(sortOrder);
+	console.log(query, sorting);
 
 	res.status(200).json(await Flight.find(query).sort(sorting));
 };

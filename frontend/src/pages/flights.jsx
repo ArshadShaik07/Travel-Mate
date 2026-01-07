@@ -7,6 +7,8 @@ function Flights() {
 	const [from, setFrom] = useState("");
 	const [to, setTo] = useState("");
 	const [date, setDate] = useState("");
+	const [sortParam, setSortParam] = useState("");
+	const [sortOrder, setSortOrder] = useState("");
 
 	useEffect(() => {
 		fetchFlights();
@@ -85,13 +87,7 @@ function Flights() {
 
 					<button
 						onClick={() => {
-							if (from.length !== 0 && to.length !== 0) {
-								fetchFlights(from, to, date);
-							} else {
-								alert("Some fields are empty");
-							}
-							setFrom("");
-							setTo("");
+							fetchFlights(from, to, date, sortParam, sortOrder);
 						}}
 						className="w-full lg:w-auto px-12 py-4 rounded-2xl bg-[rgb(6,214,160)] text-white font-black text-lg shadow-lg shadow-emerald-100 hover:bg-[rgb(4,180,135)] hover:-translate-y-0.5 active:scale-95 transition-all"
 					>
@@ -100,12 +96,38 @@ function Flights() {
 				</div>
 			</div>
 
-			<button
-				onClick={() => fetchFlights()}
-				className="mb-10 px-8 py-3 rounded-full bg-white border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all shadow-sm"
-			>
-				Show all available flights
-			</button>
+			<div className="flex flex-col md:flex-row gap-y-0.5 md:gap-2">
+				<button
+					onClick={() => {
+						fetchFlights();
+						setFrom("");
+						setTo("");
+						setSortOrder("");
+						setSortParam("");
+					}}
+					className="mb-1 md:mb-10 px-8 py-3 rounded-full bg-white border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all shadow-sm"
+				>
+					Show all available flights
+				</button>
+				<select
+					value={sortParam}
+					onChange={(e) => setSortParam(e.target.value)}
+					className="mb-1 md:mb-10 p-3 rounded-md bg-white border border-gray-200 text-sm md:text-md font-bold text-gray-500 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all shadow-sm "
+				>
+					<option value="default">Sort by</option>
+					<option value="price">price</option>
+					<option value="date">date</option>
+				</select>
+				<select
+					value={sortOrder}
+					onChange={(e) => setSortOrder(Number(e.target.value))}
+					className="mb-10 p-3 rounded-md bg-white border border-gray-200 text-sm md:text-md font-bold text-gray-500 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all shadow-sm "
+				>
+					<option value="sort in">sort type</option>
+					<option value="1">Low to high</option>
+					<option value="-1">High to low</option>
+				</select>
+			</div>
 
 			<div className="w-full max-w-4xl flex flex-col gap-6 mb-24">
 				{flights.length > 0 ? (
