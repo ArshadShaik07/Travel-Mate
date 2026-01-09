@@ -6,9 +6,11 @@ import Hotel from "../components/Hotel.jsx";
 function Hotels() {
 	const { fetchHotels, hotels } = useContext(AuthContext);
 	const [city, setCity] = useState("");
+	const [sortParam, setSortParam] = useState("");
+	const [sortOrder, setSortOrder] = useState("");
 
 	useEffect(() => {
-		fetchHotels(city);
+		fetchHotels("");
 	}, []);
 
 	return (
@@ -33,9 +35,8 @@ function Hotels() {
 							value={city}
 							onChange={(e) => setCity(e.target.value)}
 							onKeyDown={(e) => {
-								if (e.key === "Enter" && city.length !== 0) {
+								if (e.key === "Enter") {
 									fetchHotels(city);
-									setCity("");
 								}
 							}}
 							className="w-full bg-slate-50 border-2 border-transparent px-14 py-4 rounded-2xl focus:outline-none focus:bg-white focus:border-blue-500 transition-all font-bold text-slate-700 placeholder:text-slate-400"
@@ -45,14 +46,8 @@ function Hotels() {
 
 					<button
 						onClick={() => {
-							if (city.length !== 0) {
-								fetchHotels(city);
-							} else {
-								alert("Please enter a city");
-							}
-							setCity("");
+							fetchHotels(city, sortParam, sortOrder);
 						}}
-						/* Button: Dark Slate for high contrast */
 						className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-slate-900 text-white font-black text-lg hover:bg-blue-600 hover:-translate-y-0.5 active:scale-95 transition-all shadow-lg"
 					>
 						Search
@@ -60,12 +55,35 @@ function Hotels() {
 				</div>
 			</div>
 
-			<button
-				onClick={() => fetchHotels("")}
-				className="mb-10 px-6 py-2 rounded-full text-sm font-bold text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
-			>
-				View all properties
-			</button>
+			<div className="flex flex-col md:flex-row gap-1">
+				<button
+					onClick={() => {
+						fetchHotels("");
+						setCity("");
+					}}
+					className="mb-1 md:mb-10 px-6 py-2 rounded-full text-sm font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all border border-blue-500"
+				>
+					View all properties
+				</button>
+				<select
+					value={sortParam}
+					onChange={(e) => setSortParam(e.target.value)}
+					className="mb-1 md:mb-10 p-3 rounded-md bg-white border border-gray-200 text-sm md:text-md font-bold text-gray-500 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all shadow-sm "
+				>
+					<option value="default">Sort by</option>
+					<option value="pricePerNight">price</option>
+					<option value="roomsAvailable">rooms availability</option>
+				</select>
+				<select
+					value={sortOrder}
+					onChange={(e) => setSortOrder(e.target.value)}
+					className="mb-10 p-3 rounded-md bg-white border border-gray-200 text-sm md:text-md font-bold text-gray-500 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all shadow-sm "
+				>
+					<option value="default">sort type</option>
+					<option value="1">Low to high</option>
+					<option value="-1">High to low</option>
+				</select>
+			</div>
 
 			<div className="w-full max-w-5xl flex flex-col gap-8 mb-24 items-center">
 				{hotels.length > 0 ? (

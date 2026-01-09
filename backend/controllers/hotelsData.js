@@ -6,7 +6,6 @@ const showHotels = async (req, res) => {
 	city = city?.trim();
 	sortParam = sortParam?.trim();
 	sortOrder = sortOrder?.trim();
-
 	let sorting = {};
 	if (sortParam && sortOrder) sorting[sortParam] = Number(sortOrder);
 	if (city) query.city = city;

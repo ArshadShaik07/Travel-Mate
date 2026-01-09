@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
 	const [loading, setLoading] = useState(false);
 	const [updating, setUpdating] = useState(false);
 	axios.defaults.withCredentials = true;
-	const backendUrl = "http://localhost:3000/api";
+	const backendUrl = "https://holidaybookingsystem-backend.onrender.com/api";
 
 	async function handleRegister() {
 		try {
@@ -99,12 +99,19 @@ function AuthProvider({ children }) {
 		}
 	}
 
-	async function fetchHotels(city) {
+	async function fetchHotels(
+		city,
+		sortParam = "pricePerNight",
+		sortOrder = 1
+	) {
 		try {
-			const res = await axios.get(`${backendUrl}/hotels?city=${city}`);
+			const res = await axios.get(
+				`${backendUrl}/hotels?city=${city}&sortParam=${sortParam}&sortOrder=${sortOrder}`
+			);
 			setHotels(res.data);
 			console.log(res.data);
 		} catch (e) {
+			console.log(e);
 			alert(e.response.data.error);
 		}
 	}
@@ -116,7 +123,6 @@ function AuthProvider({ children }) {
 		sortParam = "price",
 		sortOrder = 1
 	) {
-		console.log(sortParam, sortOrder);
 		try {
 			const res = await axios.get(
 				`${backendUrl}/flights?from=${from}&to=${to}&date=${date}&sortParam=${sortParam}&sortOrder=${sortOrder}`
@@ -124,7 +130,6 @@ function AuthProvider({ children }) {
 			setFlights(res.data);
 			console.log(res.data);
 		} catch (e) {
-			console.log(e.response.data.error);
 			alert(e.response.data.error);
 		}
 	}

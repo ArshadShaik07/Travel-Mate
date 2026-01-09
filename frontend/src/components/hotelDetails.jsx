@@ -99,21 +99,19 @@ function HotelDetails() {
 
 							<button
 								onClick={() => {
-									if (date.length === 0) {
-										alert("specify date for booking!");
-									} else {
-										if (loggedIn) {
-											if (!booked) {
-												bookHotel(
-													hotelData._id,
-													hotelData.pricePerNight,
-													date
-												);
-												setBooked(true);
-											}
+									if (loggedIn) {
+										if (date.length === 0) {
+											alert("specify date for booking");
 										} else {
-											alert("log in to book hotel!");
+											bookHotel(
+												hotelData._id,
+												hotelData.pricePerNight,
+												date
+											);
+											setBooked(true);
 										}
+									} else {
+										alert("log in first to book hotels");
 									}
 								}}
 								className={`w-full py-4 sm:py-5 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg shadow-xl transition-all duration-300 active:scale-95 ${
