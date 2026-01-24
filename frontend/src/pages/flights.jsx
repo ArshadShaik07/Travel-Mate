@@ -4,18 +4,20 @@ import Flight from "../components/flight.jsx";
 
 function Flights() {
 	const { fetchFlights, flights } = useContext(AuthContext);
+	const limit = 5;
+	const [skip, setSkip] = useState(0);
 	const [from, setFrom] = useState("");
 	const [to, setTo] = useState("");
 	const [date, setDate] = useState("");
-	const [sortParam, setSortParam] = useState("");
-	const [sortOrder, setSortOrder] = useState("");
+	const [sortParam, setSortParam] = useState("price");
+	const [sortOrder, setSortOrder] = useState(1);
 
 	useEffect(() => {
-		fetchFlights();
-	}, []);
+		fetchFlights({ from, to, date, sortParam, sortOrder, limit, skip });
+	}, [skip]);
 
 	return (
-		<div className="flex flex-col min-h-screen items-center bg-[#F8FAFC] pt-32 px-4 sm:px-6">
+		<div className="flex flex-col min-h-screen items-center bg-[#F8FAFC] py-32 px-4 sm:px-6">
 			<div className="text-center space-y-3 mb-12">
 				<h1 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tight">
 					Search{" "}
@@ -69,9 +71,8 @@ function Flights() {
 									from.length !== 0 &&
 									to.length !== 0
 								) {
-									fetchFlights(from, to, "");
-									setFrom("");
-									setTo("");
+									setSkip(0);
+									fetchFlights({ from, to, limit, skip: 0 });
 								}
 							}}
 							className="w-full bg-gray-50 border-2 border-transparent px-14 py-4 rounded-2xl focus:outline-none focus:bg-white focus:border-[rgb(6,214,160)] transition-all font-bold text-gray-700"
@@ -87,7 +88,16 @@ function Flights() {
 
 					<button
 						onClick={() => {
-							fetchFlights(from, to, date, sortParam, sortOrder);
+							setSkip(0);
+							fetchFlights({
+								from,
+								to,
+								date,
+								sortParam,
+								sortOrder,
+								limit,
+								skip: 0,
+							});
 						}}
 						className="w-full lg:w-auto px-12 py-4 rounded-2xl bg-[rgb(6,214,160)] text-white font-black text-lg shadow-lg shadow-emerald-100 hover:bg-[rgb(4,180,135)] hover:-translate-y-0.5 active:scale-95 transition-all"
 					>
@@ -99,11 +109,9 @@ function Flights() {
 			<div className="flex flex-col md:flex-row gap-y-0.5 md:gap-2">
 				<button
 					onClick={() => {
-						fetchFlights();
+						fetchFlights({ limit, skip: 0 });
 						setFrom("");
 						setTo("");
-						setSortOrder("");
-						setSortParam("");
 					}}
 					className="mb-1 md:mb-10 px-8 py-3 rounded-full bg-white border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all shadow-sm"
 				>
@@ -129,12 +137,12 @@ function Flights() {
 				</select>
 			</div>
 
-			<div className="w-full max-w-4xl flex flex-col gap-6 mb-24">
+			<div className="min-w-screen max-w-4xl flex flex-col m-10 gap-6 ">
 				{flights.length > 0 ? (
 					flights.map((flight) => (
 						<div
 							key={flight._id}
-							className="w-full flex justify-center"
+							className="w-auto flex justify-center"
 						>
 							<Flight flight={flight} />
 						</div>
@@ -146,7 +154,7 @@ function Flights() {
 							No flights found for this route.
 						</p>
 						<button
-							onClick={() => fetchFlights()}
+							onClick={() => fetchFlights({ limit, skip: 0 })}
 							className="mt-4 text-[rgb(6,214,160)] font-bold hover:underline"
 						>
 							Reset Search
@@ -154,6 +162,14 @@ function Flights() {
 					</div>
 				)}
 			</div>
+			<button
+				onClick={() => {
+					setSkip((prevSkip) => prevSkip + 5);
+				}}
+				className="px-8 py-3 bg-[rgb(6,214,160)] hover:bg-[rgb(4,160,118)] text-white font-semibold rounded-full shadow-md hover:shadow-lg transform transition-all duration-150 active:scale-95"
+			>
+				Show more
+			</button>
 		</div>
 	);
 }

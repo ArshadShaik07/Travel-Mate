@@ -1,7 +1,7 @@
 import { Flight } from "../models/flights.model.js";
 
 const showFlights = async (req, res) => {
-	let { from, to, date, sortParam, sortOrder } = req.query;
+	let { from, to, date, sortParam, sortOrder, skip, limit } = req.query;
 	from = from?.trim();
 	to = to?.trim();
 	date = date?.trim();
@@ -14,8 +14,11 @@ const showFlights = async (req, res) => {
 	if (date) query.date = date;
 	let sorting = {};
 	if (sortParam && sortOrder) sorting[sortParam] = Number(sortOrder);
-
-	res.status(200).json(await Flight.find(query).sort(sorting));
+	const flights = await Flight.find(query)
+		.sort(sorting)
+		.skip(skip)
+		.limit(limit);
+	res.status(200).json(flights);
 };
 
 const getFlightById = async (req, res) => {

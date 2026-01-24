@@ -1,7 +1,7 @@
 import { Hotel } from "../models/hotels.model.js";
 
 const showHotels = async (req, res) => {
-	let { city, sortParam, sortOrder } = req.query;
+	let { city, sortParam, sortOrder, skip, limit } = req.query;
 	let query = {};
 	city = city?.trim();
 	sortParam = sortParam?.trim();
@@ -9,7 +9,11 @@ const showHotels = async (req, res) => {
 	let sorting = {};
 	if (sortParam && sortOrder) sorting[sortParam] = Number(sortOrder);
 	if (city) query.city = city;
-	res.status(200).json(await Hotel.find(query).sort(sorting));
+	const hotels = await Hotel.find(query)
+		.sort(sorting)
+		.skip(skip)
+		.limit(limit);
+	res.status(200).json(hotels);
 };
 
 const getHotelById = async (req, res) => {

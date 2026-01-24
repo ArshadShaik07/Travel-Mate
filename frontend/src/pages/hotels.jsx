@@ -6,15 +6,17 @@ import Hotel from "../components/Hotel.jsx";
 function Hotels() {
 	const { fetchHotels, hotels } = useContext(AuthContext);
 	const [city, setCity] = useState("");
-	const [sortParam, setSortParam] = useState("");
-	const [sortOrder, setSortOrder] = useState("");
+	const [sortParam, setSortParam] = useState("pricePerNight");
+	const [sortOrder, setSortOrder] = useState(1);
+	const limit = 5;
+	const [skip, setSkip] = useState(0);
 
 	useEffect(() => {
-		fetchHotels("");
-	}, []);
+		fetchHotels({ city, sortParam, sortOrder, limit, skip });
+	}, [skip]);
 
 	return (
-		<div className="flex flex-col min-h-screen items-center bg-slate-50 pt-32 px-4 sm:px-6">
+		<div className="flex flex-col min-h-screen items-center bg-slate-50 pt-32 px-4 sm:px-6 mb-10">
 			<div className="text-center space-y-3 mb-10">
 				<h1 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tight">
 					Find your <span className="text-blue-600">Stay</span>
@@ -36,7 +38,7 @@ function Hotels() {
 							onChange={(e) => setCity(e.target.value)}
 							onKeyDown={(e) => {
 								if (e.key === "Enter") {
-									fetchHotels(city);
+									fetchHotels({ city, limit, skip: 0 });
 								}
 							}}
 							className="w-full bg-slate-50 border-2 border-transparent px-14 py-4 rounded-2xl focus:outline-none focus:bg-white focus:border-blue-500 transition-all font-bold text-slate-700 placeholder:text-slate-400"
@@ -46,7 +48,14 @@ function Hotels() {
 
 					<button
 						onClick={() => {
-							fetchHotels(city, sortParam, sortOrder);
+							setSkip(0);
+							fetchHotels({
+								city,
+								sortParam,
+								sortOrder,
+								skip: 0,
+								limit,
+							});
 						}}
 						className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-slate-900 text-white font-black text-lg hover:bg-blue-600 hover:-translate-y-0.5 active:scale-95 transition-all shadow-lg"
 					>
@@ -58,7 +67,8 @@ function Hotels() {
 			<div className="flex flex-col md:flex-row gap-1">
 				<button
 					onClick={() => {
-						fetchHotels("");
+						setSkip(0);
+						fetchHotels({ limit, skip: 0 });
 						setCity("");
 					}}
 					className="mb-1 md:mb-10 px-6 py-2 rounded-full text-sm font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all border border-blue-500"
@@ -85,12 +95,12 @@ function Hotels() {
 				</select>
 			</div>
 
-			<div className="w-full max-w-5xl flex flex-col gap-8 mb-24 items-center">
+			<div className="min-w-screen pt-15 max-w-5xl flex flex-col flex-wrap md:flex-row gap-8 mb-10 items-center justify-center px-15">
 				{hotels.length > 0 ? (
 					hotels.map((hotel) => (
 						<div
 							key={hotel._id}
-							className="w-full flex justify-center hover:scale-[1.01] transition-all duration-300"
+							className="w-xl flex justify-center hover:scale-[1.01] transition-all duration-300"
 						>
 							<Hotel hotel={hotel} />
 						</div>
@@ -103,6 +113,14 @@ function Hotels() {
 					</div>
 				)}
 			</div>
+			<button
+				onClick={() => {
+					setSkip((prevSkip) => prevSkip + 5);
+				}}
+				className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-md hover:shadow-lg transform transition-all duration-300 active:scale-95"
+			>
+				Show more
+			</button>
 		</div>
 	);
 }

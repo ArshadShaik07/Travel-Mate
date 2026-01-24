@@ -17,7 +17,6 @@ function AuthProvider({ children }) {
 	const [updating, setUpdating] = useState(false);
 	axios.defaults.withCredentials = true;
 	const backendUrl = "https://holidaybookingsystem-backend.onrender.com/api";
-
 	async function handleRegister() {
 		try {
 			let res = await axios.post(`${backendUrl}/register`, {
@@ -25,11 +24,9 @@ function AuthProvider({ children }) {
 				username,
 				password,
 			});
-			console.log(res.data.message);
 			alert(`${res.data.message} please login now!`);
 			navigate("/");
 		} catch (e) {
-			console.log(e.response.data.error);
 			alert(e.response.data.error);
 		}
 		setEmail("");
@@ -45,7 +42,6 @@ function AuthProvider({ children }) {
 			});
 			navigate("/");
 			setLoggedIn(true);
-			console.log(res.data);
 			setAccessToken(res.data.accessToken);
 		} catch (e) {
 			console.error(e.response.data);
@@ -64,7 +60,7 @@ function AuthProvider({ children }) {
 				{},
 				{
 					withCredentials: true,
-				}
+				},
 			);
 
 			alert(res.data.message);
@@ -87,11 +83,9 @@ function AuthProvider({ children }) {
 					Authorization: `Bearer ${accessToken}`,
 				},
 			});
-			console.log(res.data);
 			setUpdating(false);
 			alert("updated successfully");
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.status === 401) {
 				renewToken();
 			}
@@ -99,40 +93,48 @@ function AuthProvider({ children }) {
 		}
 	}
 
-	async function fetchHotels(
-		city,
+	async function fetchHotels({
+		city = "",
 		sortParam = "pricePerNight",
-		sortOrder = 1
-	) {
+		sortOrder = 1,
+		limit,
+		skip,
+	}) {
 		try {
 			const res = await axios.get(
-				`${backendUrl}/hotels?city=${city}&sortParam=${sortParam}&sortOrder=${sortOrder}`
+				`${backendUrl}/hotels?city=${city}&sortParam=${sortParam}&sortOrder=${sortOrder}&limit=${limit}&skip=${skip}`,
 			);
-			setHotels(res.data);
-			console.log(res.data);
+			skip > 0
+				? setHotels([...hotels, ...res.data])
+				: setHotels(res.data);
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			alert(e.response.data.error);
 		}
 	}
 
-	async function fetchFlights(
+	async function fetchFlights({
 		from = "",
 		to = "",
 		date = "",
 		sortParam = "price",
-		sortOrder = 1
-	) {
+		sortOrder = 1,
+		limit,
+		skip,
+	}) {
 		try {
 			const res = await axios.get(
-				`${backendUrl}/flights?from=${from}&to=${to}&date=${date}&sortParam=${sortParam}&sortOrder=${sortOrder}`
+				`${backendUrl}/flights?from=${from}&to=${to}&date=${date}&sortParam=${sortParam}&sortOrder=${sortOrder}&limit=${limit}&skip=${skip}`,
 			);
-			setFlights(res.data);
-			console.log(res.data);
+
+			skip > 0
+				? setFlights((prevFlights) => [...prevFlights, ...res.data])
+				: setFlights(res.data);
 		} catch (e) {
 			alert(e.response.data.error);
 		}
 	}
+
 	async function fetchFlightById(id) {
 		const res = await axios.get(`${backendUrl}/flights/${id}`);
 		return res.data;
@@ -158,11 +160,9 @@ function AuthProvider({ children }) {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${accessToken}`,
 					},
-				}
+				},
 			);
-			console.log(res.data);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.status === 401) {
 				alert("login first to book hotels!");
 			}
@@ -184,11 +184,9 @@ function AuthProvider({ children }) {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${accessToken}`,
 					},
-				}
+				},
 			);
-			console.log(res.data);
 		} catch (e) {
-			console.log(e.response.status);
 			if (e.response.status === 401) {
 				alert("login first to book flights!");
 			}
@@ -210,10 +208,8 @@ function AuthProvider({ children }) {
 
 			return res.data;
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.status === 401) {
 				const newAccessToken = await renewToken();
-				console.log(newAccessToken + " from profile");
 				setAccessToken(newAccessToken);
 				try {
 					const res = await axios.get(`${backendUrl}/me`, {
@@ -237,10 +233,8 @@ function AuthProvider({ children }) {
 					Authorization: `Bearer ${accessToken}`,
 				},
 			});
-			console.log(res.data);
 			return res.data;
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.status === 401) {
 				try {
 					const newAccessToken = await renewToken();
@@ -269,7 +263,6 @@ function AuthProvider({ children }) {
 			});
 			alert(res.data.message);
 		} catch (e) {
-			console.log(e.response);
 			if (e.response.status === 401) {
 				try {
 					const newAccessToken = await renewToken();
@@ -280,7 +273,7 @@ function AuthProvider({ children }) {
 							headers: {
 								Authorization: `Bearer ${newAccessToken}`,
 							},
-						}
+						},
 					);
 					alert(res.data.message);
 				} catch (e) {
