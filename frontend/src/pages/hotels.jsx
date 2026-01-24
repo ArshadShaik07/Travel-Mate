@@ -95,12 +95,12 @@ function Hotels() {
 				</select>
 			</div>
 
-			<div className="min-w-screen pt-15 max-w-5xl flex flex-col flex-wrap md:flex-row gap-8 mb-10 items-center justify-center px-15">
+			<div className="w-full pt-6 max-w-7xl flex flex-col sm:flex-row flex-wrap gap-6 sm:gap-8 mb-10 items-center justify-center px-4 sm:px-6 lg:px-10">
 				{hotels.length > 0 ? (
 					hotels.map((hotel) => (
 						<div
 							key={hotel._id}
-							className="w-xl flex justify-center hover:scale-[1.01] transition-all duration-300"
+							className="w-full sm:w-[48%] lg:w-[30%] flex justify-center hover:scale-[1.01] transition-all duration-300"
 						>
 							<Hotel hotel={hotel} />
 						</div>
@@ -113,6 +113,7 @@ function Hotels() {
 					</div>
 				)}
 			</div>
+
 			<button
 				onClick={() => {
 					setSkip((prevSkip) => prevSkip + 5);
