@@ -5,7 +5,7 @@ function Hotel({ hotel }) {
 
 	return (
 		<div
-			className="group w-full max-w-4xl bg-slate-300 rounded-[1.5rem] sm:rounded-[1.8rem] border border-slate-100 p-3 sm:p-5 flex flex-col md:flex-row gap-4 sm:gap-6 cursor-pointer hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] transition-all duration-300"
+			className="group w-full max-w-4xl bg-white rounded-[1.5rem] sm:rounded-[2rem] border border-slate-100 p-3 sm:p-5 flex flex-col md:flex-row gap-4 sm:gap-6 cursor-pointer hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] transition-all duration-300"
 			onClick={() => navigate(`/hotels/${hotel._id}`)}
 		>
 			{/* Image Section - Responsive height */}
@@ -60,10 +60,9 @@ function Hotel({ hotel }) {
 							{hotel.roomsAvailable} rooms left
 						</p>
 					</div>
-				</div>
-				<div className="flex justify-end">
+
 					<button
-						className="px-5 py-2 bg-slate-900 text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm
+						className="px-5 sm:px-8 py-2 sm:py-3 bg-slate-900 text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm
                                group-hover:bg-blue-600 active:scale-95 transition-all shadow-lg shadow-slate-200"
 					>
 						View Stay
