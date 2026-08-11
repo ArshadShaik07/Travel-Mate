@@ -70,7 +70,8 @@ const loginUser = async (req, res) => {
 
 	res.cookie("refreshToken", refreshToken, {
 		httpOnly: true,
-		sameSite: "lax",
+		secure: true,
+		sameSite: "none",
 		path: "/",
 		maxAge: 15 * 24 * 60 * 60 * 1000,
 	});
@@ -86,7 +87,8 @@ const logoutUser = async (req, res) => {
 	console.log(refreshToken);
 	res.clearCookie("refreshToken", {
 		httpOnly: true,
-		sameSite: "lax",
+		secure: true,
+		sameSite: "none",
 		path: "/",
 	});
 	refreshTokens = refreshTokens.filter((t) => t !== refreshToken);
