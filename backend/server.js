@@ -8,6 +8,7 @@ import { Booking } from "./models/bookings.model.js";
 import cookieParser from "cookie-parser";
 dotenv.config();
 const app = express();
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(express.urlencoded({ extented: true }));
 app.use(cors({ origin: process.env.FRONT_END_URL, credentials: true }));
